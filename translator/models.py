@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Translation(models.Model):
+    session_key = models.CharField(max_length=40)
     text = models.TextField()
     translated_text = models.TextField()
 

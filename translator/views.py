@@ -5,11 +5,17 @@ from .services import TranslationService
 def home(request):
     translated_text = None
     if request.method == "POST":
+
+        if not request.session.session_key:
+            request.session.create()
+
+        current_session_id = request.session.session_key    
+
         text = request.POST.get("source_text")
         source_language = request.POST.get("source_language")
         target_language = request.POST.get("target_language")
 
-        translated_text = TranslationService.translate(text, source_language, target_language)
+        translated_text = TranslationService.translate(text, source_language, target_language, current_session_id)
 
         context = {
             "text": text,
