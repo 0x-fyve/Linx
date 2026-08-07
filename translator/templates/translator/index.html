@@ -103,15 +103,15 @@
 
         <!-- Navigation Links -->
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800/50 text-gray-900 dark:text-gray-100 font-medium transition-colors">
+            <a href="#" data-target="translate" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800/50 text-gray-900 dark:text-gray-100 font-medium transition-colors">
                 <i class="ph ph-translate text-lg"></i>
                 Translate
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <a href="#" data-target="history" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
                 <i class="ph ph-clock-counter-clockwise text-lg"></i>
                 History
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <a href="#" data-target="favorites" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
                 <i class="ph ph-heart text-lg"></i>
                 Favorites
             </a>
@@ -135,7 +135,7 @@
                 <button id="open-sidebar" class="md:hidden p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
                     <i class="ph ph-list text-xl"></i>
                 </button>
-                <h1 class="text-lg font-medium hidden sm:block">Text Translation</h1>
+                <h1 id="header-title" class="text-lg font-medium hidden sm:block">Text Translation</h1>
             </div>
 
             <div class="flex items-center gap-2 sm:gap-4">
@@ -152,10 +152,12 @@
 
         <!-- Scrollable Translation Area -->
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-            <div class="max-w-5xl mx-auto w-full flex flex-col gap-6">
+            
+            <!-- TRANSLATE VIEW -->
+            <div id="view-translate" class="view-section max-w-5xl mx-auto w-full flex flex-col gap-6">
                 
                 <!-- Django Form Placeholder -->
-                <form method="POST" action="#" id="translation-form" class="flex flex-col gap-4">
+                <form method="POST" id="translation-form" class="flex flex-col gap-4">
                     <!-- Django CSRF Token Placeholder -->
                     {% csrf_token %}
 
@@ -265,6 +267,132 @@
                 </p>
 
             </div>
+
+            <!-- HISTORY VIEW -->
+            <div id="view-history" class="view-section hidden max-w-5xl mx-auto w-full flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">History</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Your recent translation activity.</p>
+                    </div>
+                    <button class="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors">
+                        Clear All
+                    </button>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <!-- History Item 1 -->
+                    {% for translation in translations %}
+                    <div class="bg-white dark:bg-card-dark p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 transition-all hover:border-blue-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <span>{{ translation.source_language }}</span>
+                                <i class="ph ph-arrow-right"></i>
+                                <span>{{ translation.target_language }}</span>
+                            </div>
+                            <span class="text-xs text-gray-400">{{ translation.created_at|timesince }} ago</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="text-gray-900 dark:text-gray-100">{{ translation.text }}</div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ translation.translated_text }}</div>
+                        </div>
+                        <div class="mt-4 flex items-center justify-end gap-2 border-t border-gray-100 dark:border-gray-800/50 pt-3">
+                            <button class="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Copy translation"><i class="ph ph-copy text-lg"></i></button>
+                            <button class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Save to favorites"><i class="ph ph-heart text-lg"></i></button>
+                            <button class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Delete from history"><i class="ph ph-trash text-lg"></i></button>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- History Item 2 -->
+                    <div class="bg-white dark:bg-card-dark p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 transition-all hover:border-blue-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <span>English</span>
+                                <i class="ph ph-arrow-right"></i>
+                                <span>French</span>
+                            </div>
+                            <span class="text-xs text-gray-400">Yesterday</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="text-gray-900 dark:text-gray-100">I would like to order a coffee, please.</div>
+                            <div class="text-gray-600 dark:text-gray-400">Je voudrais commander un café, s'il vous plaît.</div>
+                        </div>
+                        <div class="mt-4 flex items-center justify-end gap-2 border-t border-gray-100 dark:border-gray-800/50 pt-3">
+                            <button class="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Copy translation"><i class="ph ph-copy text-lg"></i></button>
+                            <button class="p-1.5 text-red-500 hover:text-red-400 transition-colors" title="Saved to favorites"><i class="ph-fill ph-heart text-lg"></i></button>
+                            <button class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Delete from history"><i class="ph ph-trash text-lg"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAVORITES VIEW -->
+            <div id="view-favorites" class="view-section hidden max-w-5xl mx-auto w-full flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Saved Favorites</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Translations you've saved for quick access.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Favorite Item 1 -->
+                    <div class="bg-white dark:bg-card-dark p-4 sm:p-5 rounded-2xl shadow-sm border border-blue-200 dark:border-blue-900/50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 dark:bg-blue-500/10 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-110"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <span>English</span>
+                                    <i class="ph ph-arrow-right"></i>
+                                    <span>French</span>
+                                </div>
+                                <button class="text-red-500 hover:text-red-600 transition-colors"><i class="ph-fill ph-heart text-xl"></i></button>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">I would like to order a coffee, please.</p>
+                                <p class="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 p-3 rounded-xl">Je voudrais commander un café, s'il vous plaît.</p>
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <button class="flex-1 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700">
+                                    <i class="ph ph-copy text-lg"></i> Copy
+                                </button>
+                                <button class="flex-1 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700">
+                                    <i class="ph ph-speaker-high text-lg"></i> Listen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Favorite Item 2 -->
+                    <div class="bg-white dark:bg-card-dark p-4 sm:p-5 rounded-2xl shadow-sm border border-blue-200 dark:border-blue-900/50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 dark:bg-blue-500/10 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-110"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <span>English</span>
+                                    <i class="ph ph-arrow-right"></i>
+                                    <span>Japanese</span>
+                                </div>
+                                <button class="text-red-500 hover:text-red-600 transition-colors"><i class="ph-fill ph-heart text-xl"></i></button>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">Where is the train station?</p>
+                                <p class="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 p-3 rounded-xl">駅はどこですか？ (Eki wa doko desu ka?)</p>
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <button class="flex-1 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700">
+                                    <i class="ph ph-copy text-lg"></i> Copy
+                                </button>
+                                <button class="flex-1 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700">
+                                    <i class="ph ph-speaker-high text-lg"></i> Listen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -463,6 +591,59 @@
                     }, 300);
                 }, 3000);
             }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const viewSections = document.querySelectorAll('.view-section');
+            const headerTitle = document.getElementById('header-title');
+
+            const viewTitles = {
+                'translate': 'Text Translation',
+                'history': 'History',
+                'favorites': 'Favorites'
+            };
+
+            function switchView(targetView) {
+                // Hide all sections
+                viewSections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Show target section
+                const targetSection = document.getElementById(`view-${targetView}`);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
+
+                // Update Header
+                if (headerTitle) {
+                    headerTitle.textContent = viewTitles[targetView] || 'Linx';
+                }
+
+                // Update active state in nav
+                navLinks.forEach(link => {
+                    if (link.dataset.target === targetView) {
+                        link.classList.remove('text-gray-600', 'dark:text-gray-400', 'hover:bg-gray-100', 'dark:hover:bg-gray-800/50');
+                        link.classList.add('bg-gray-100', 'dark:bg-gray-800/50', 'text-gray-900', 'dark:text-gray-100');
+                    } else {
+                        link.classList.add('text-gray-600', 'dark:text-gray-400', 'hover:bg-gray-100', 'dark:hover:bg-gray-800/50');
+                        link.classList.remove('bg-gray-100', 'dark:bg-gray-800/50', 'text-gray-900', 'dark:text-gray-100');
+                    }
+                });
+
+                // Close sidebar on mobile after navigating
+                if (window.innerWidth < 768) {
+                    closeSidebar();
+                }
+            }
+
+            // Bind click events to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.dataset.target;
+                    switchView(target);
+                });
+            });
         });
     </script>
 </body>

@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .services import TranslationService
+from .models import Translation
+from django.shortcuts import redirect
 
 # Create your views here.
 def home(request):
@@ -16,12 +18,15 @@ def home(request):
         target_language = request.POST.get("target_language")
 
         translated_text = TranslationService.translate(text, source_language, target_language, current_session_id)
+        translations = Translation.objects.filter(session_key=current_session_id).order_by("-created_at")
 
         context = {
             "text": text,
             "translated_text": translated_text,
             "source_language": source_language,
             "target_language": target_language,
+            "translations": translations,
         }
+
         return render(request, "translator/index.html", context)
-    return render(request, "translator/index.html")
+    return render(request, "translator/index.html", {"translations": Translation.objects.filter(session_key=request.session.session_key).order_by("-created_at")})
