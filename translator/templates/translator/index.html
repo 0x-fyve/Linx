@@ -155,7 +155,7 @@
             <div class="max-w-5xl mx-auto w-full flex flex-col gap-6">
                 
                 <!-- Django Form Placeholder -->
-                <form method="POST" action="{% url 'translate' %}" id="translation-form" class="flex flex-col gap-4">
+                <form method="POST" action="#" id="translation-form" class="flex flex-col gap-4">
                     <!-- Django CSRF Token Placeholder -->
                     {% csrf_token %}
 
@@ -165,7 +165,7 @@
                         <!-- Source Language -->
                         <div class="w-full sm:w-2/5 flex items-center">
                             <i class="ph ph-text-aa text-gray-400 ml-3 mr-2 hidden sm:block"></i>
-                            <select name="source_lang" id="source_lang" class="w-full bg-transparent text-sm font-medium py-2 pl-3 pr-8 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors text-gray-800 dark:text-gray-200">
+                            <select name="source_language" id="source_lang" class="w-full bg-transparent text-sm font-medium py-2 pl-3 pr-8 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors text-gray-800 dark:text-gray-200">
                                 <option value="auto">Auto Detect</option>
                                 <option value="en" selected>English</option>
                                 <option value="es">Spanish</option>
@@ -186,7 +186,7 @@
 
                         <!-- Target Language -->
                         <div class="w-full sm:w-2/5 flex items-center">
-                            <select name="target_lang" id="target_lang" class="w-full bg-transparent text-sm font-medium py-2 pl-3 pr-8 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors text-gray-800 dark:text-gray-200">
+                            <select name="target_language" id="target_lang" class="w-full bg-transparent text-sm font-medium py-2 pl-3 pr-8 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer transition-colors text-gray-800 dark:text-gray-200">
                                 <option value="en">English</option>
                                 <option value="es" selected>Spanish</option>
                                 <option value="fr">French</option>
