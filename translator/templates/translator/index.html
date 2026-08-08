@@ -252,8 +252,10 @@
                                         <i class="ph ph-copy text-lg"></i>
                                     </button>
                                     <button type="button" id="favorite-btn" class="p-2 text-gray-500 hover:text-red-500 dark:hover:text-red-400 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors group" aria-label="Save to favorites">
-                                        <i class="ph ph-heart text-lg group-hover:hidden block"></i>
-                                        <i class="ph-fill ph-heart text-lg group-hover:block hidden text-red-500"></i>
+                                        <a href="{% url "favourite" translation.id %}">
+                                            <i class="ph ph-heart text-lg group-hover:hidden block"></i>
+                                            <i class="ph-fill ph-heart text-lg group-hover:block hidden text-red-500"></i>
+                                        </a>
                                     </button>
                                 </div>
                             </div>
@@ -268,7 +270,6 @@
 
             </div>
 
-            <!-- HISTORY VIEW -->
             <div id="view-history" class="view-section hidden max-w-5xl mx-auto w-full flex flex-col gap-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -303,27 +304,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
-                    <!-- History Item 2 -->
-                    <div class="bg-white dark:bg-card-dark p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 transition-all hover:border-blue-500/30">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <span>English</span>
-                                <i class="ph ph-arrow-right"></i>
-                                <span>French</span>
-                            </div>
-                            <span class="text-xs text-gray-400">Yesterday</span>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="text-gray-900 dark:text-gray-100">I would like to order a coffee, please.</div>
-                            <div class="text-gray-600 dark:text-gray-400">Je voudrais commander un café, s'il vous plaît.</div>
-                        </div>
-                        <div class="mt-4 flex items-center justify-end gap-2 border-t border-gray-100 dark:border-gray-800/50 pt-3">
-                            <button class="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" title="Copy translation"><i class="ph ph-copy text-lg"></i></button>
-                            <button class="p-1.5 text-red-500 hover:text-red-400 transition-colors" title="Saved to favorites"><i class="ph-fill ph-heart text-lg"></i></button>
-                            <button class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Delete from history"><i class="ph ph-trash text-lg"></i></button>
-                        </div>
-                    </div>
                 </div>
             </div>
 

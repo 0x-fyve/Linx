@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .services import TranslationService
 from .models import Translation
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 # Create your views here.
 def home(request):
@@ -30,3 +30,10 @@ def home(request):
 
         return render(request, "translator/index.html", context)
     return render(request, "translator/index.html", {"translations": Translation.objects.filter(session_key=request.session.session_key).order_by("-created_at")})
+
+def favourite(request, pk):
+    translation = get_object_or_404(Translation, pk=pk)
+    translation.is_favorite = not translation.is_favorite
+    translation.save()
+
+    return redirect('/')
