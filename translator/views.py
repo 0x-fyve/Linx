@@ -39,12 +39,14 @@ def home(request):
         })
 
 def favorite(request, id):
-    translation = Translation.objects.get(
-        id=id,
-        session_key=request.session.session_key
-    )
+    translation = get_object_or_404(Translation, id=id, session_key=request.session.session_key)
 
     translation.is_favorite = not translation.is_favorite
     translation.save()
 
+    return redirect("/")
+
+def delete_translation(request, id):
+    translation = get_object_or_404(Translation, id=id, session_key=request.session.session_key)
+    translation.delete()
     return redirect("/")
