@@ -19,7 +19,7 @@ class TranslationService:
 
         data = response.json()
 
-        Translation.objects.create(
+        translation =Translation.objects.create(
             session_key = current_session_id,
             text = text,
             source_language = source,
@@ -27,4 +27,4 @@ class TranslationService:
             translated_text = data["responseData"]["translatedText"]
         )
 
-        return data["responseData"]["translatedText"]
+        return translation

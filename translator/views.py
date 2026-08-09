@@ -17,23 +17,34 @@ def home(request):
         source_language = request.POST.get("source_language")
         target_language = request.POST.get("target_language")
 
-        translated_text = TranslationService.translate(text, source_language, target_language, current_session_id)
+        translation = TranslationService.translate(text, source_language, target_language, current_session_id)
         translations = Translation.objects.filter(session_key=current_session_id).order_by("-created_at")
+        favorites = Translation.objects.filter(session_key=current_session_id, is_favorite=True).order_by("-created_at")
 
         context = {
             "text": text,
-            "translated_text": translated_text,
+            "translation": translation,
             "source_language": source_language,
             "target_language": target_language,
             "translations": translations,
+            "favorites": favorites
         }
 
         return render(request, "translator/index.html", context)
-    return render(request, "translator/index.html", {"translations": Translation.objects.filter(session_key=request.session.session_key).order_by("-created_at")})
+    return render(
+        request, "translator/index.html", 
+        {
+            "translations": Translation.objects.filter(session_key=request.session.session_key).order_by("-created_at"),
+            "favorites": Translation.objects.filter(session_key=request.session.session_key, is_favorite=True).order_by("-created_at"),
+        })
 
-def favourite(request, pk):
-    translation = get_object_or_404(Translation, pk=pk)
+def favorite(request, id):
+    translation = Translation.objects.get(
+        id=id,
+        session_key=request.session.session_key
+    )
+
     translation.is_favorite = not translation.is_favorite
     translation.save()
 
-    return redirect('/')
+    return redirect("/")
