@@ -13,7 +13,7 @@ def home(request):
 
         current_session_id = request.session.session_key    
 
-        text = request.POST.get("source_text")
+        text = request.POST.get("text")
         source_language = request.POST.get("source_language")
         target_language = request.POST.get("target_language")
 
